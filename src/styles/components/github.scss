@@ -1,0 +1,127 @@
+main {
+  max-width: 1024px;
+  margin: 100px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .github {
+    &__search {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      margin-bottom: 20px;
+
+      label {
+        position: relative;
+
+        i.fa-search {
+          position: absolute;
+          left: 10px;
+          top: 12px;
+        }
+      }
+
+      &-input {
+        height: 40px;
+        width: 500px;
+        border-radius: 4px;
+        outline: none;
+        font-size: 17px;
+        border: 1px solid grey;
+        text-indent: 30px;
+        margin-right: 10px;
+      }
+
+      &-button {
+        height: 44px;
+        padding: 10px 20px;
+        right: 10px;
+        top: 4px;
+        color: #fff;
+        font-size: 17px;
+        border: none;
+        cursor: pointer;
+        background: #2196F3;
+        border-radius: 6px;
+        font-weight: 600;
+
+        &:hover {
+          background: #0b7dda;
+        }
+      }
+    }
+
+    &__user {
+      .result {
+        display: grid;
+        gap: 50px 50px;
+        grid-template-columns: auto auto auto;
+
+        .list-user {
+          display: flex;
+          flex-direction: column;
+          cursor: pointer;
+          width: 100px;
+
+          span {
+            font-size: 13px;
+            white-space: pre-wrap;
+          }
+
+          &:hover {
+            i, span {
+              color: darkblue;
+            }
+          }
+
+          i {
+            font-size: 80px;
+          }
+        }
+      }
+
+      button.loadmore {
+        margin-top: 20px;
+        padding: 15px;
+        border: none;
+        background: #2196f3;
+        color: white;
+        cursor: pointer;
+      }
+    }
+
+    &__repository {
+      .result {
+        display: flex;
+        gap: 5px;
+        flex-direction: column;
+
+        .list-repository {
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+    }
+
+    &__pager {
+      margin-top: 15px;
+      display: flex;
+      gap: 4px;
+      font-size: 14px;
+      button {
+        margin-left: 2px;
+        margin-right: 2px;
+        padding: 2px;
+        &.active {
+          color: #fff;
+          font-weight: 700;
+          background: darkblue;
+        }
+      }
+    }
+  }
+}
+
