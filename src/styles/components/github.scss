@@ -102,6 +102,28 @@ main {
         .list-repository {
           display: flex;
           justify-content: space-between;
+          cursor: pointer;
+        }
+      }
+    }
+
+    &__issue {
+      &-button {
+        margin-left: 20px;
+        padding: 8px;
+        border: none;
+        background: #b35004;
+        color: white;
+        cursor: pointer;
+      }
+      .result {
+        display: flex;
+        gap: 5px;
+        flex-direction: column;
+
+        .list-issue {
+          display: flex;
+          justify-content: space-between;
         }
       }
     }
@@ -119,6 +141,68 @@ main {
           color: #fff;
           font-weight: 700;
           background: darkblue;
+        }
+      }
+    }
+
+    &__modal {
+      &-mask {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        opacity: .75;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+      }
+      &-body {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 620px;
+        height: 400px;
+        background-color: #fff;
+        .header {
+          margin-top: 10px;
+          height: 40px;
+          font-size: 24px;
+          font-weight: 600;
+          padding-left: 10px;
+          color: #000;
+          border-bottom: 1px solid gray;
+        }
+        .content {
+          padding: 30px;
+          input, textarea {
+            margin-bottom: 20px;
+            width: 100%;
+          }
+        }
+        .footer {
+          padding-right: 20px;
+          div {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+          }
+          button {
+            border: none;
+            padding: 12px;
+            width: 80px;
+            border-radius: 3px;
+          }
+          &__btn-cancel {
+            background: #e5e5e5;
+            color: #000000;
+            font-size: 18px;
+          }
+          &__btn-create {
+            background: #01055e;
+            font-size: 18px;
+            color: #ffffff;
+          }
         }
       }
     }

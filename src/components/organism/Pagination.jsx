@@ -3,7 +3,7 @@ import { Next, Priv } from '../atoms/PaginationIcon'
 import { PageNumber } from '../atoms/PageNumber'
 
 export const Pagination = (props) => {
-  const { totalPage, callback, currentPage } = props
+  const { totalPage, callback, currentPage, totalItem } = props
   const [activeIndex, setActiveIndex] = React.useState(currentPage || 1)
   const [prev, setPrev] = React.useState(0)
   const [next, setNext] = React.useState(0)
@@ -58,7 +58,7 @@ export const Pagination = (props) => {
             }
           </div>
           <Next onClick={() => setActiveIndex(next)} disable={activeIndex === totalPage} />
-          <div>Page: { `${activeIndex}/${totalPage}` }</div>
+          <div>Page: { `${activeIndex}/${totalPage} of total: ${totalItem} records`}</div>
         </div>
       </>
   )

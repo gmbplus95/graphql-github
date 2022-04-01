@@ -30,16 +30,15 @@ export const GithubUser = (props) => {
     return null
   }
   const [limit, setLimit] = React.useState(10)
-  const { loading, error, data } = useQuery(GET_USERS(search, limit))
-  if (loading) return 'Waiting...'
+  const { error, data } = useQuery(GET_USERS(search, limit))
   if (error) {
-    console.log(error)
+    console.error(error)
     return <>Something went wrong!</>
   }
-  if (!data?.search || data?.search?.edges.length === 0) {
-    return <>No result found!</>
-  }
 
+  if (!data?.search) {
+    return <></>
+  }
   const { edges, userCount } = data.search
   if (edges && edges.length === 0) {
     return <>No result found!</>
@@ -55,7 +54,7 @@ export const GithubUser = (props) => {
           return (
               <div className='list-user' key={index} onClick={() => selectUser(item?.node?.login)}>
                 <i className="fa fa-user" aria-hidden="true"/>
-                <span>{item?.node?.name} - {item?.node?.email}</span>
+                <span>{item?.node?.login} - {item?.node?.email}</span>
               </div>
           )
         })}

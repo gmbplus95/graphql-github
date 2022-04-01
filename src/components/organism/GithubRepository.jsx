@@ -5,11 +5,13 @@ import {
 } from '@apollo/client'
 import { Pagination } from './Pagination'
 
+const DEFAULT_PER_PAGE = 6
+
 const GET_REPOSITORIES_BY_USER = (user) => {
   return gql(`
     query {
       user(login: "${user}") {
-        repositories(first: 6, isFork: false) {
+        repositories(first: ${DEFAULT_PER_PAGE}, isFork: false) {
           totalCount
           pageInfo {
             startCursor
@@ -34,7 +36,7 @@ const GET_REPOSITORIES_BY_USER_NEXT = (user, after) => {
   return gql(`
     query {
       user(login: "${user}") {
-        repositories(first: 6,after: "${after}", isFork: false) {
+        repositories(first: ${DEFAULT_PER_PAGE},after: "${after}", isFork: false) {
           totalCount
           pageInfo {
             startCursor
@@ -59,13 +61,11 @@ const GET_REPOSITORIES_BY_USER_PREV = (user, before) => {
   return gql(`
     query {
       user(login: "${user}") {
-        repositories(first: 6,before: "${before}", isFork: false) {
+        repositories(last: ${DEFAULT_PER_PAGE},before: "${before}", isFork: false) {
           totalCount
           pageInfo {
             startCursor
             endCursor
-            hasNextPage
-            hasPreviousPage
           }
           nodes {
             name
@@ -81,7 +81,7 @@ const GET_REPOSITORIES_BY_USER_PREV = (user, before) => {
 }
 
 export const GithubRepository = (props) => {
-  const { user } = props
+  const { user, selectRepository } = props
   if (!user) {
     return null
   }
@@ -125,35 +125,42 @@ export const GithubRepository = (props) => {
     }
   }, [data])
 
-  if (loading) {
-    return 'Fetching repository...'
-  }
   if (error) {
-    console.log(error)
     return <>Something went wrong!</>
   }
-  if (!state?.user || state?.user?.repositories.length === 0) {
-    return <>No result found!</>
+  if (loading && !cursor.currentPage) {
+    return <>Fetching...</>
   }
+  if (!state?.user || !state?.user?.repositories) {
+    return <>No repository found!</>
+  }
+
   const { nodes, totalCount } = state.user.repositories
-  if (!nodes || nodes.length === 0) {
-    return <>No result found!</>
+
+  const handleSelectRepository = item => {
+    selectRepository(item)
   }
+
   return (
       <>
         <h2>REPOSITORIES of USER: {user}</h2>
-        {renderRepository(nodes)}
-        <Pagination totalPage={Math.round(totalCount / 6)} callback={handlePageChange} currentPage={cursor.currentPage} />
+        {renderRepository(nodes, handleSelectRepository)}
+        <Pagination
+          totalPage={Math.round(totalCount / DEFAULT_PER_PAGE)}
+          callback={handlePageChange}
+          currentPage={cursor.currentPage}
+          totalItem={totalCount}
+        />
       </>
   )
 }
 
-const renderRepository = (items) => {
+const renderRepository = (items, handleSelectRepository) => {
   return (
     <div className='result'>
       {items.map((item, index) => {
         return (
-          <div className='list-repository' key={index}>
+          <div className='list-repository' key={index} onClick={() => handleSelectRepository(item)}>
             <span>{item?.name}</span>
             <span>{`${item?.stargazerCount} stars/ ${item?.watchers?.totalCount} watching` }</span>
           </div>
