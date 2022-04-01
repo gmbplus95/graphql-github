@@ -162,7 +162,7 @@ main {
         left: 50%;
         transform: translate(-50%, -50%);
         width: 620px;
-        height: 400px;
+        height: 450px;
         background-color: #fff;
         .header {
           margin-top: 10px;
@@ -178,6 +178,9 @@ main {
           input, textarea {
             margin-bottom: 20px;
             width: 100%;
+            padding: 8px;
+            outline: none;
+            resize: none;
           }
         }
         .footer {

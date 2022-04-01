@@ -22,6 +22,7 @@ const GET_REPOSITORIES_BY_USER = (user) => {
           nodes {
             name
             stargazerCount
+            id
             watchers {
               totalCount
             }
@@ -47,6 +48,7 @@ const GET_REPOSITORIES_BY_USER_NEXT = (user, after) => {
           nodes {
             name
             stargazerCount
+            id
             watchers {
               totalCount
             }
@@ -69,6 +71,7 @@ const GET_REPOSITORIES_BY_USER_PREV = (user, before) => {
           }
           nodes {
             name
+            id
             stargazerCount
             watchers {
               totalCount

@@ -1,7 +1,8 @@
 import React from 'react'
 import {
-  useQuery,
-  gql
+  gql,
+  useMutation,
+  useQuery
 } from '@apollo/client'
 import { Pagination } from './Pagination'
 
@@ -34,15 +35,6 @@ const GET_REPOSITORY_ISSUE = (repoName) => {
     }
   `)
 }
-
-// mutation CreateIssue {
-//   createIssue(input: {repositoryId: "[ID from previous call]", title: "TestIssue", body: "Not able to create an issue"}) {
-//     issue {
-//       number
-//       body
-//     }
-//   }
-// }
 
 const GET_REPOSITORY_ISSUE_NEXT = (repoName, after) => {
   return gql(`
@@ -99,6 +91,20 @@ const GET_REPOSITORY_ISSUE_PREV = (repoName, before) => {
     }
   `)
 }
+
+// create issue
+// Define mutation
+const CREATE_ISSUE =
+   gql`
+  mutation CreateIssue($repoId: ID!, $title: String!, $body: String!) {
+    createIssue(input: {repositoryId: $repoId, title: $title, body: $body}) {
+      issue {
+        number
+        body
+      }
+    }
+  }
+`
 
 export const GithubRepositoryIssue = (props) => {
   const { user, repository } = props
@@ -162,8 +168,16 @@ export const GithubRepositoryIssue = (props) => {
   }
   if (!edges || edges.length === 0) {
     return <>
-      No issue found! <button className='github__issue-button' onClick={handleOpenDialog}>+ New issue</button>
-      <IssueModal show={showModal} hideModal={() => setShowModal(false)}/>
+      <h3>
+        OPEN ISSUES in REPOSITORY: {user}/{repository.name}
+      </h3>
+      No issues found!
+      <button className='github__issue-button' onClick={handleOpenDialog}>+ New issue</button>
+      <IssueModal
+        show={showModal}
+        hideModal={() => setShowModal(false)}
+        repositoryId={repository.id}
+      />
     </>
   }
 
@@ -180,7 +194,7 @@ export const GithubRepositoryIssue = (props) => {
         currentPage={cursor.currentPage}
         totalItem={issueCount}
       />
-      <IssueModal show={showModal} hideModal={() => setShowModal(false)}/>
+      <IssueModal show={showModal} hideModal={() => setShowModal(false)} repositoryId={repository.id}/>
     </>
   )
 }
@@ -220,13 +234,25 @@ const renderRepositoryIssue = (items) => {
 }
 
 const IssueModal = (props) => {
-  debugger
-  const { show, hideModal } = props
+  const { show, hideModal, repositoryId } = props
+  const [createIssue] = useMutation(CREATE_ISSUE)
+  const [form, setForm] = React.useState({
+    title: '',
+    body: ''
+  })
   if (!show) {
     return null
   }
   const handleCreateIssue = () => {
-
+    if (form.title === '' || form.description === '') {
+      alert('title and description are required!')
+      return
+    }
+    createIssue(
+      { variables: { repoId: repositoryId, title: form.title, body: form.body } }).then(res => {
+      hideModal()
+      alert('Create issue success')
+    })
   }
   return (
     <div
@@ -239,10 +265,10 @@ const IssueModal = (props) => {
           </div>
           <div className='content'>
             <label htmlFor="title">
-              <input type="text" id='title' placeholder='Title' />
+              <input value={form.text} type="text" id='title' placeholder='Title' onChange={e => setForm({ ...form, title: e.target.value })}/>
             </label>
             <label htmlFor="description">
-              <textarea id='description' placeholder='Description' rows="10"/>
+              <textarea value={form.body} id='description' placeholder='Description' rows="10" onChange={e => setForm({ ...form, body: e.target.value })}/>
             </label>
           </div>
           <div className='footer'>
